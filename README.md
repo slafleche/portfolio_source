@@ -91,4 +91,4 @@ This project is open source and available under the [MIT License](LICENSE).
 ## Todo
 
 - Fix linting issues for semi colons
--
+- Add linting to webpack configs as well
