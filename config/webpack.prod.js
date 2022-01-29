@@ -1,7 +1,9 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const { merge } = require('webpack-merge')
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+const { merge } = require('webpack-merge');
+const path = require('path');
 const paths = require('./paths')
 const common = require('./webpack.common')
 
@@ -39,6 +41,31 @@ module.exports = merge(common, {
       filename: 'styles/[name].[contenthash].css',
       chunkFilename: '[id].css',
     }),
+
+    new FileManagerPlugin({
+      events: {
+        onStart: {
+          delete: [{
+              source: path.join(paths.portfolio, "/**/*"),
+              options: {
+                force: true,
+              }
+            }
+          ],
+        },
+      }
+    }),
+
+    new CopyPlugin({
+      patterns: [
+        { 
+          from: paths.build, 
+          to: paths.portfolio
+        },
+      ],
+    }),
+
+
   ],
   optimization: {
     minimize: true,
@@ -51,5 +78,8 @@ module.exports = merge(common, {
     hints: false,
     maxEntrypointSize: 512000,
     maxAssetSize: 512000,
-  },
+  },  
 })
+
+
+
